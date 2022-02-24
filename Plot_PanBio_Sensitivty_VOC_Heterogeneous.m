@@ -1,0 +1,27 @@
+clear;
+clc;
+close all;
+testName='Abbot PanBio';
+
+t=linspace(0,20,1000001);
+ts=[6.3 5.0 4.3 3.0];
+td=ts+20;
+VAC=0;
+VOC=0;
+R0=[2.79 4.19 5.08 6.93];
+
+figure('units','normalized','outerposition',[0.1 0.1 0.8 0.8]);
+subplot('Position',[0.084868421052632,0.147859922178988,0.895131578947368,0.832140077821012]);
+for ii=1:4
+   [~,MLE_Ag,~,~,~,~,~,t,~,~,~,~] = Sensitivity_for_Plotting(testName,ts(ii),VAC,ii-1);
+   plot(t,MLE_Ag,'LineWidth',2); hold on
+end
+xlim([0 20]);
+ylim([0 1]);
+set(gca,'LineWidth',2,'tickdir','out','Fontsize',24,'XTick',0:20);
+box off;
+xlabel('Days post-infection','Fontsize',28);
+ylabel('Panbio diagnostic sensitivity','Fontsize',28);
+legend({'Non-VOC','Alpha VOC','Delta VOC','Omicron VOC'},'Fontsize',24);
+
+print(gcf,'RA_Test_Sensitivity_VOC_Heterogeneous.png','-dpng','-r600');
