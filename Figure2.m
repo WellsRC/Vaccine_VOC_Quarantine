@@ -299,7 +299,7 @@ ss(3).MarkerEdgeColor=hex2rgb('#7570b3');
 % ss(4).MarkerEdgeColor=hex2rgb('#e7298a');
 
 
-set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'XTick',0:10:100,'Xminortick','off','Ytick',[0:1:15],'Yminortick','off','YTickLabel',{'\it{R_E} \geq 1','1','2','3','4','5','6','7','8','9','10','11','12','13','14','No test'},'YDir','reverse');
+set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'XTick',0:10:100,'Xminortick','off','Ytick',[0:1:15],'Yminortick','off','YTickLabel',{'','1','2','3','4','5','6','7','8','9','10','11','12','13','14','No test'},'YDir','reverse');
 box off;
 xlabel('Two-dose uptake','Fontsize',20,'Position',[50 17.7 -1]);
 ylabel({'Minimum frequency','of testing  (days^{-1})'},'Fontsize',20,'Position',[-9.231752673157025,7.5,-0.1]);
@@ -434,7 +434,7 @@ ss(3).MarkerEdgeColor=hex2rgb('#7570b3');
 ss(4).MarkerEdgeColor=hex2rgb('#e7298a');
 
 
-set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'XTick',0:10:100,'Xminortick','off','Ytick',[0:1:15],'Yminortick','off','YTickLabel',{'\it{R_E} \geq 1','1','2','3','4','5','6','7','8','9','10','11','12','13','14','No test'},'YDir','reverse');
+set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'XTick',0:10:100,'Xminortick','off','Ytick',[0:1:15],'Yminortick','off','YTickLabel',{'','1','2','3','4','5','6','7','8','9','10','11','12','13','14','No test'},'YDir','reverse');
 box off;
 xlabel('Booster uptake','Fontsize',20,'Position',[50 17.7 -1]);
 ylabel({'Minimum frequency','of testing  (days^{-1})'},'Fontsize',20,'Position',[-9.231752673157025,7.5,-0.1]);
