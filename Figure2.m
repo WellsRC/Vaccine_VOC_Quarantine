@@ -1,6 +1,8 @@
 clear;
 clc;
 close all;
+
+addpath('Alternative_Test_Results');
 figure('units','normalized','outerposition',[0 0.05 0.6 1]);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 %% Quarantine
@@ -18,9 +20,9 @@ for VOC=0:3
     R_Immunity=zeros(15,3);
     for V=1:3
         if(V==1)
-            load(['TestingonExit_RTPCR_24hrDelay_Vaccinated=0.mat'],'VOCv','qv','IDSLA','IDSLS');
+            load(['TestingonExit_Abbot PanBio_Vaccinated=0.mat'],'VOCv','qv','IDSLA','IDSLS');
         else
-            load(['TestingonExit_RTPCR_24hrDelay_Vaccinated=1.mat'],'VOCv','qv','IDSLA','IDSLS');
+            load(['TestingonExit_Abbot PanBio_Vaccinated=1.mat'],'VOCv','qv','IDSLA','IDSLS');
         end
         R_Immunity(:,V)=(pA(V).*IDSLA(VOCv==VOC)+(1-pA(V)).*IDSLS(VOCv==VOC));
     end
@@ -101,9 +103,9 @@ for VOC=0:3
     R_Immunity=zeros(15,3);
     for V=1:3
         if(V==1)
-            load(['TestingonExit_RTPCR_24hrDelay_Vaccinated=0.mat'],'VOCv','qv','IDSLA','IDSLS');
+            load(['TestingonExit_Abbot PanBio_Vaccinated=0.mat'],'VOCv','qv','IDSLA','IDSLS');
         else
-            load(['TestingonExit_RTPCR_24hrDelay_Vaccinated=1.mat'],'VOCv','qv','IDSLA','IDSLS');
+            load(['TestingonExit_Abbot PanBio_Vaccinated=1.mat'],'VOCv','qv','IDSLA','IDSLS');
         end
         R_Immunity(:,V)=(pA(V).*IDSLA(VOCv==VOC)+(1-pA(V)).*IDSLS(VOCv==VOC));
     end
@@ -190,18 +192,17 @@ for VOC=0:3
     [pA,epsI]=VariantParameters(VOC);
     for V=1:3
         if(V==1)
-            load(['VOC=' num2str(VOC) '-day_24h_Delay_Testing_Frequency_RTPCR_Vaccinated=0.mat'],'RTotA','RTotS','R0','td','ts');
+            load(['Testing_Frequency_Abbot PanBio_VOC= ' num2str(VOC) '_VAC= 0.mat'],'RTotA','RTotS','R0','td','ts');
             VAC=0;
         else
-            load(['VOC=' num2str(VOC) '-day_24h_Delay_Testing_Frequency_RTPCR_Vaccinated=1.mat'],'RTotA','RTotS','R0','td','ts');
-            
+            load(['Testing_Frequency_Abbot PanBio_VOC= ' num2str(VOC) '_VAC= 1.mat'],'RTotA','RTotS','R0','td','ts');
             VAC=1;
         end
         R_Immunity(1:14,V)=pA(V).*RTotA+(1-pA(V)).*RTotS;
         
         
-        RSONS=R0(VOC+1).*integral(@(t)ViralShedding_Symptomatic(t,td(VOC+1),ts(VOC+1),VAC,VOC),0,ts(VOC+1));
-        RAONS=R0(VOC+1).*integral(@(t)ViralShedding_Asymptomatic(t,td(VOC+1),ts(VOC+1),VAC,VOC),0,inf);
+        RSONS=R0(VOC+1).*integral(@(t)ViralShedding_Symptomatic(t,td,ts,VAC,VOC),0,ts);
+        RAONS=R0(VOC+1).*integral(@(t)ViralShedding_Asymptomatic(t,td,ts,VAC,VOC),0,inf);
         R_Immunity(15,V)=pA(V).*RAONS+(1-pA(V)).*RSONS;
     end
 
@@ -326,18 +327,17 @@ for VOC=0:3
     [pA,epsI]=VariantParameters(VOC);
     for V=1:3
         if(V==1)
-            load(['VOC=' num2str(VOC) '-day_24h_Delay_Testing_Frequency_RTPCR_Vaccinated=0.mat'],'RTotA','RTotS','R0','td','ts');
+            load(['Testing_Frequency_Abbot PanBio_VOC= ' num2str(VOC) '_VAC= 0.mat'],'RTotA','RTotS','R0','td','ts');
             VAC=0;
         else
-            load(['VOC=' num2str(VOC) '-day_24h_Delay_Testing_Frequency_RTPCR_Vaccinated=1.mat'],'RTotA','RTotS','R0','td','ts');
-            
+            load(['Testing_Frequency_Abbot PanBio_VOC= ' num2str(VOC) '_VAC= 1.mat'],'RTotA','RTotS','R0','td','ts');
             VAC=1;
         end
         R_Immunity(1:14,V)=pA(V).*RTotA+(1-pA(V)).*RTotS;
         
         
-        RSONS=R0(VOC+1).*integral(@(t)ViralShedding_Symptomatic(t,td(VOC+1),ts(VOC+1),VAC,VOC),0,ts(VOC+1));
-        RAONS=R0(VOC+1).*integral(@(t)ViralShedding_Asymptomatic(t,td(VOC+1),ts(VOC+1),VAC,VOC),0,inf);
+        RSONS=R0(VOC+1).*integral(@(t)ViralShedding_Symptomatic(t,td,ts,VAC,VOC),0,ts);
+        RAONS=R0(VOC+1).*integral(@(t)ViralShedding_Asymptomatic(t,td,ts,VAC,VOC),0,inf);
         R_Immunity(15,V)=pA(V).*RAONS+(1-pA(V)).*RSONS;
     end
 
@@ -439,7 +439,7 @@ box off;
 xlabel('Booster uptake','Fontsize',20,'Position',[50 17.7 -1]);
 ylabel({'Minimum frequency','of testing  (days^{-1})'},'Fontsize',20,'Position',[-9.231752673157025,7.5,-0.1]);
 legend boxoff;
-legend(pp,{'Original','Alpha','Delta','Omicron'},'Fontsize',14,'location','NorthWest');
+legend(pp,{'Original','Alpha','Delta','Omicron'},'Fontsize',14,'Position',[0.607981220657277,0.338230330794659,0.107394364334538,0.102836876533918]);
 
 xlim([0 100]);
 ylim([-3.*dy 15])
@@ -447,4 +447,5 @@ xtickformat('percentage');
 xtickangle(90);
 text(-25.865925315696778,-0.181636363636366,'D','Fontsize',28,'FontWeight','bold');
 
+rmpath('Alternative_Test_Results');
 print(gcf,['Figure2.png'],'-dpng','-r300');
