@@ -240,7 +240,7 @@ load('Heatmap_Fig1F.mat','z');
 colormap(z);
 
 ylabel({'Frequency of','testing (days^{-1})'},'Fontsize',20,'Position',[-9.430107065426462,8.175007033348267,1.000000000000014])
-xlabel({'Booster uptake'},'Fontsize',20);
+xlabel({'Booster uptake'},'Fontsize',20,'Position',[50.00004768371581,-1.469395744745933,1.000000000000014]);
 
 box off;
 XTL=cell(15,1);
@@ -257,7 +257,8 @@ h.Label.String='Effective reproduction number';
 h.Label.Rotation=270;
 h.Label.Position=[5.2637033992343,1.050000953674316,0];
 h.Ticks=[0.05 0.25:0.25:1.75 2.05];
-
+xtickformat('percentage');
+xtickangle(90);
 
 text(-23.48606129,15,'F','Fontsize',28,'FontWeight','bold');
 
