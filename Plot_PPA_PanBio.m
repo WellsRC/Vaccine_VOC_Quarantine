@@ -1,4 +1,5 @@
- testName='Abbot PanBio';
+addpath('PPA_RA_Tests');
+testName='Abbot PanBio';
  ts=4.3;
  VAC=0;
  VOC=0;
@@ -18,5 +19,5 @@ xlabel('Days since symptom onset','Fontsize',22);
 box off;
 ylabel({'Percent','positive agreement'},'Fontsize',22);
 
-
+rmpath('PPA_RA_Tests');
 print(gcf,['PPA_PanBio.png'],'-dpng','-r600');

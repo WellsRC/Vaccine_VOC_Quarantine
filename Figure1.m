@@ -9,18 +9,48 @@ figure('units','normalized','outerposition',[0 0.05 0.7 1]);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Infectivity (Unvaccinated vs Vaccinated
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-t=linspace(0,20,1000001);
+
 ts=[6.3];
 td=ts+20;
 VOC=0;
-R0=2.79;
 
 subplot('Position',[0.105,0.7527,0.35,0.24]);
+
+load('Peak_Infection.mat','mmv','tsv');
+mm=pchip(tsv,mmv,ts);
+% Prior to the peak
+
+t_PRE=linspace(0,mm,1001);
+m_nVAC=(40-20.7)/(-3.5-0);
+Ct_PRE=m_nVAC.*(t_PRE-mm)+20.7;
+
+% After the peak
+t_POST=linspace(mm,20,1001);
+m_nVAC=(20.7-40)/(0-7.5);
+Ct_POST=m_nVAC.*(t_POST-mm)+20.7;
+       
+plot(Ct_PRE,ViralShedding_Symptomatic(t_PRE,inf,ts,0,0)./ViralShedding_Symptomatic(mm,inf,ts,0,0),'-','color',hex2rgb('CF3721'),'LineWidth',2); hold on
+plot(Ct_POST,ViralShedding_Symptomatic(t_POST,inf,ts,0,0)./ViralShedding_Symptomatic(mm,inf,ts,0,0),'-.','color',hex2rgb('CF3721'),'LineWidth',2); hold on
+
+set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'Xminortick','off','Ytick',[0:0.2:1],'Yminortick','off','xdir','reverse');
+box off;
+xlabel('Ct value','Fontsize',20,'Position',[40,-0.1250,-1]);
+ylabel('Relative infectivity','Fontsize',20);
+legend({'Pre-peak','Post-peak'},'Fontsize',14,'Location','NorthWest');
+legend boxoff;
+xlim([20.7 55]);
+% ylim([0 0.5])
+text(65.081,0.983122362869198,'A','Fontsize',28,'FontWeight','bold');
+
+
+subplot('Position',[0.56121669777,0.7527,0.35,0.24]);
+t=linspace(0,20,1000001);
+R0=2.79;
 for ii=1:2
    plot(t,R0.*ViralShedding_Symptomatic(t,td,ts,ii-1,VOC),'LineWidth',2); hold on
 end
 
-set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'XTick',0:2:20,'Xminortick','on','Ytick',[0:0.1:0.5],'Yminortick','on');
+set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'XTick',0:2:20,'Xminortick','off','Ytick',[0:0.1:0.5],'Yminortick','off');
 box off;
 xlabel('Days post-infection','Fontsize',20,'Position',[8,-0.065970462185924,-1]);
 ylabel('Infectivity','Fontsize',20);
@@ -28,19 +58,47 @@ legend({'Unvaccinated','Vaccinated'},'Fontsize',14);
 legend boxoff;
 xlim([0 16]);
 ylim([0 0.5])
-text(-4.635992550338415,0.488,'A','Fontsize',28,'FontWeight','bold');
+text(-4.635992550338415,0.488,'B','Fontsize',28,'FontWeight','bold');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Sensitivity (Unvaccinated vs Vaccinated
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-subplot('Position',[0.56121669777,0.7527,0.35,0.24]);
+
+subplot('Position',[0.105,0.446605876393113,0.35,0.24]);
+
+tsB=5.723;
+load('Peak_Infection.mat','mmv','tsv');
+mm=pchip(tsv,mmv,tsB);
+% Prior to the peak
+t_PRE=linspace(0,mm,1001);
+S_PRE = TestSensitivity(t_PRE,tsB,[],0,0);
+
+% After the peak
+t_POST=linspace(mm,50,1001);
+S_POST = TestSensitivity(t_POST,tsB,[],0,0);
+       
+plot(ViralShedding_Symptomatic(t_PRE,inf,tsB,0,0)./ViralShedding_Symptomatic(mm,inf,tsB,0,0),S_PRE,'-','color',hex2rgb('#486824'),'LineWidth',2); hold on
+plot(ViralShedding_Symptomatic(t_POST,inf,tsB,0,0)./ViralShedding_Symptomatic(mm,inf,tsB,0,0),S_POST,'-.','color',hex2rgb('#486824'),'LineWidth',2); hold on
+
+set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'Xminortick','off','Ytick',[0:0.2:1],'Yminortick','off','Xtick',[0:0.1:1]);
+box off;
+xlabel({'Relative infectivity'},'Fontsize',20);
+ylabel({'RT-PCR diagnostic','sensitivity'},'Fontsize',20);
+legend({'Pre-peak','Post-peak'},'Fontsize',14,'Location','NorthWest');
+legend boxoff;
+xlim([0 1]);
+% ylim([0 0.5])
+text(-0.30107526881720,0.983122362869198,'C','Fontsize',28,'FontWeight','bold');
+
+
+subplot('Position',[0.56121669777,0.446605876393113,0.35,0.24]);
 load('Abbot PanBio_LR_Parameters.mat','beta')
 for ii=1:2
    plot(t,TestSensitivity(t,ts,beta,ii-1,VOC),'LineWidth',2); hold on
 end
 
-set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'XTick',0:2:20,'Xminortick','on','Ytick',[0:0.1:1],'Yminortick','on');
+set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'XTick',0:2:20,'Xminortick','off','Ytick',[0:0.1:1],'Yminortick','off');
 box off;
 xlabel('Days post-infection','Fontsize',20,'Position',[10,-0.131940924371849,-1]);
 ylabel({'Diagnostic','sensitivity'},'Fontsize',20);
@@ -48,12 +106,13 @@ legend({'Unvaccinated','Vaccinated'},'Fontsize',14);
 legend boxoff;
 xlim([0 20]);
 ylim([0 1])
-text(-4.6978069368,0.976,'B','Fontsize',28,'FontWeight','bold');
+text(-4.6978069368,0.976,'D','Fontsize',28,'FontWeight','bold');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
 % PQT (VAC vs Non_VAC)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-pA=[0.351 0.9611];
+[pA,~]=VariantParameters(0);
+pA=pA(1:2);
 R_Immunity=zeros(15,2);
 for VAC=0:1
         load(['TestingonExit_Abbot PanBio_Vaccinated=' num2str(VAC) '.mat'],'VOCv','qv','IDSLA','IDSLS');
@@ -63,7 +122,9 @@ end
 
 PR=Probability_Onward(R_Immunity,'Negative Binomial');
 
-subplot('Position',[0.105,0.446605876393113,0.35,0.24]);
+
+
+subplot('Position',[0.105,0.082,0.35,0.283687943262412]);
 
 plot([0:14],sqrt(PR),'LineWidth',2); 
 xlim([0 14]);
@@ -75,19 +136,21 @@ ylabel({'Probability of','post-quarantine transmission'},'Fontsize',18);
 
 legend({'Unvaccinated','Vaccinated'},'Fontsize',14);
 legend boxoff;
-text(-4.056578039996936,0.5830,'C','Fontsize',28,'FontWeight','bold');
+text(-4.056578039996936,0.5830,'E','Fontsize',28,'FontWeight','bold');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
 % Infectivity (VOC)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 t=linspace(0,20,1000001);
-ts=[6.3 5.0 4.3 3.0];
+ts=[6.3 5.0 4.3 3.2];
 td=ts+20;
 Vac=0;
 R0=[2.79 4.19 5.08 6.93];
 
-subplot('Position',[0.56121669777,0.446605876393113,0.35,0.24]);
+
+
+subplot('Position',[0.56121669777,0.082,0.35,0.283687943262412]);
 for ii=1:4
    pp(ii)=plot(t,R0(ii).*ViralShedding_Symptomatic(t,td(ii),ts(ii),Vac,ii-1),'LineWidth',2); hold on
 end
@@ -101,7 +164,7 @@ pp(2).Color=hex2rgb('#d95f02');
 pp(3).Color=hex2rgb('#7570b3');
 pp(4).Color=hex2rgb('#e7298a');
 
-set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'XTick',0:1:10,'Xminortick','on','Ytick',[0:0.25:2.25],'Yminortick','on');
+set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'XTick',0:1:10,'Xminortick','off','Ytick',[0:0.25:2.25],'Yminortick','off');
 box off;
 xlabel('Days post-infection','Fontsize',20,'Position',[5,-0.34,-1]);
 ylabel('Infectivity','Fontsize',20);
@@ -109,18 +172,21 @@ legend({'Original','Alpha','Delta','Omicron'},'Fontsize',14);
 legend boxoff;
 xlim([0 10]);
 ylim([0 2.25])
-text(-2.3347050,2.227,'D','Fontsize',28,'FontWeight','bold');
-
+text(-2.3347050,2.227,'F','Fontsize',28,'FontWeight','bold');
+print(gcf,['Figure1_a.png'],'-dpng','-r300');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Quarantine (Background immunity)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+figure('units','normalized','outerposition',[0 0.05 0.7 1]);
 
 subplot('Position',[0.105,0.082,0.35,0.283687943262412]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 % Omicron  background immunity three doses
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
-pA=[0.275 0.275 0.7629];
+[pA,epsI]=VariantParameters(3);
 
 R_Immunity=zeros(15,3);
 for V=1:3
@@ -134,7 +200,7 @@ end
 
 
 RIm=zeros(15,12);
-epsI=[0.38 0.82];
+
 for jj=1:11
     vacu=(jj-1)./10;
     V_Im_Pop=(1-vacu).*epsI(1)+vacu.*epsI(2);
@@ -172,7 +238,7 @@ ylabel({'Probability of','post-quarantine transmission'},'Fontsize',18);
 text(10.2624703087886,0.618504947750682,'Booster uptake','Horizontalalignment','center','Fontsize',16);
 legend({'0%','30%','70%','100%','No vaccination'},'Fontsize',14);
 legend boxoff;
-text(-4.056578039996936,0.637210474,'E','Fontsize',28,'FontWeight','bold');
+text(-4.056578039996936,0.637210474,'G','Fontsize',28,'FontWeight','bold');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Serial testing (Background immunity)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -182,7 +248,7 @@ subplot('Position',[0.56121669777,0.082,0.35,0.283687943262412]);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 % Omicron  background immunity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
-pA=[0.275 0.275 0.7629];
+[pA,epsI]=VariantParameters(3);
 
 R_Immunity=zeros(15,3);
 VOC=3;
@@ -203,7 +269,6 @@ end
 
 RIm=zeros(15,1001);
 
-epsI=[0.38 0.82];
 for jj=1:1001
     vacu=(jj-1)./1000;
     V_Im_Pop=(1-vacu).*epsI(1)+vacu.*epsI(2);
@@ -234,7 +299,9 @@ for ii=1:1001
 end
 plot([0:0.1:100],TFRE1,'k','LineWidth',2);
 
-plot(pchip(RIm(15,:),[0:0.1:100],1).*ones(101,1),linspace(14.35,15.35,101),'k','LineWidth',2);
+if(min(RIm(15,:)<=1))
+    plot(pchip(RIm(15,:),[0:0.1:100],1).*ones(101,1),linspace(14.35,15.35,101),'k','LineWidth',2);
+end
 
 load('Heatmap_Fig1F.mat','z');
 colormap(z);
@@ -260,77 +327,6 @@ h.Ticks=[0.05 0.25:0.25:1.75 2.05];
 xtickformat('percentage');
 xtickangle(90);
 
-text(-23.48606129,15,'F','Fontsize',28,'FontWeight','bold');
-
-% RImNV=R_Immunity(:,1);
-% 
-% RImT=RIm(:,[1 4 8 11]);
-% VV=[0 30 70 100];
-% for ii=1:4
-%     if((ii==1)||(ii==4))
-%         plot(linspace(1,6.75,101),pchip([1:14],RImT(1:14,ii),linspace(1,6.75,101)),'k','LineWidth',2); hold on;
-%         
-%         plot(linspace(8.25,14,101),pchip([1:14],RImT(1:14,ii),linspace(8.25,15,101)),'k','LineWidth',2);
-%     else
-%         plot(linspace(1,6.75,101),pchip([1:14],RImT(1:14,ii),linspace(1,6.75,101)),'k-.','LineWidth',1.5);
-%         
-%         plot(linspace(8.25,14,101),pchip([1:14],RImT(1:14,ii),linspace(8.25,15,101)),'k-.','LineWidth',1.5);
-%     end
-%     text(mean([6.75 8.25]),pchip([1:14],RImT(1:14,ii),mean([6.75 8.25])),[num2str(VV(ii)) '%'],'Fontsize',16,'HorizontalAlignment','center');
-% end
-% 
-% plot(linspace(1,6.75,101),pchip([1:14],RImNV(1:14),linspace(1,6.75,101)),'color',[0.75 0.75 0.75],'LineWidth',2); hold on;
-% plot(linspace(8.25,14,101),pchip([1:14],RImNV(1:14),linspace(8.25,15,101)),'color',[0.75 0.75 0.75],'LineWidth',2);
-% 
-% 
-%     text(mean([6.75 8.25]),pchip([1:14],RImNV(1:14),mean([6.75 8.25])),[{'No','vaccination'}],'Fontsize',16,'HorizontalAlignment','center','color',[0.75 0.75 0.75]);
-% 
-% 
-% 
-% plot([1 15.5],[1 1],'-.','color',[0.75 0.75 0.75],'LineWidth',2);
-% 
-% MM=min(pchip([1:14],max(RImT(1:14,:),[],2),linspace(1,14,1001)),1);
-% MM2=flip(pchip(1:14,min(RImT(1:14,:),[],2),linspace(1,14,1001)));
-% patch([linspace(1,14,1001) flip(linspace(1,14,1001))],[MM MM2],'g','facealpha',0.1,'LineStyle','none');
-% 
-% 
-% MM=max(pchip([1:14],max(RImT(1:14,:),[],2),linspace(1,14,1001)),1);
-% MM2=flip(max(pchip([1:14],min(RImT(1:14,:),[],2),linspace(1,14,1001)),1));
-% 
-% patch([linspace(1,14,1001) flip(linspace(1,14,1001))],[MM MM2],'r','facealpha',0.1,'LineStyle','none');
-% 
-% for ii=1:4
-%     if((ii==1)||(ii==4))
-%         plot(linspace(14.25,15.5,101),RImT(15,ii).*ones(101,1),'k','LineWidth',2); hold on;
-%     else
-%         plot(linspace(14.25,15.5,101),RImT(15,ii).*ones(101,1),'k-.','LineWidth',1.5);
-%     end
-% end
-% 
-% plot(linspace(14.25,15.5,101),RImNV(15).*ones(101,1),'color',[0.75 0.75 0.75],'LineWidth',1.5);
-% 
-% patch([14.25 15.5 15.5 14.25],[max(min(RImT(15,:),[],2),1) max(min(RImT(15,:),[],2),1) max(RImT(15,:),[],2) max(RImT(15,:),[],2)],'r','facealpha',0.1,'LineStyle','none');
-% 
-% patch([14.25 15.5 15.5 14.25],[min(max(RImT(15,:),[],2),1) min(max(RImT(15,:),[],2),1) min(RImT(15,:),[],2) min(RImT(15,:),[],2)],'g','facealpha',0.1,'LineStyle','none');
-% 
-% plot(14.25.*ones(101,1), linspace(0,4,101),'-.','color',[0.75 0.75 0.75],'LineWidth',2);
-% % text(14.4,2,'No test','Horizontalalignment','center','verticalalignment','middle','rotation',90,'Fontsize',16,'color',[0.75 0.75 0.75]);
-% % plot(14.5.*ones(101,1), linspace(2.5,4,101),'-.','color',[0.75 0.75 0.75],'LineWidth',2);
-% box off;
-% XTL=cell(15,1);
-% for ii=1:14
-%    XTL{ii}=num2str(ii); 
-% end
-% XTL{15}='';
-% 
-% text(14.896674584323046,-0.671,'No test','Horizontalalignment','center','verticalalignment','middle','rotation',90,'Fontsize',16);
-% 
-% set(gca,'LineWidth',2,'tickdir','out','Fontsize',18,'XTick',1:1:15,'XTickLabel',XTL,'Xminortick','off','Ytick',[0:0.5:4],'Yminortick','on');
-% ylim([0 4]);
-% xlim([1 15.5])
-% xlabel({'Frequency of testing (days^{-1})'},'Fontsize',20,'Position',[7.5,-0.4813,-1])
-% ylabel({'Effective','reproduction number'},'Fontsize',20);
-
-% text(-2.8409,4.03,'F','Fontsize',28,'FontWeight','bold');
+text(-23.48606129,15,'H','Fontsize',28,'FontWeight','bold');
 rmpath('Alternative_Test_Results');
-print(gcf,['Figure1.png'],'-dpng','-r300');
+print(gcf,['Figure1_b.png'],'-dpng','-r300');

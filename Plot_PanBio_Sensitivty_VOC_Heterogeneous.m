@@ -4,7 +4,7 @@ close all;
 testName='Abbot PanBio';
 
 t=linspace(0,20,1000001);
-ts=[6.3 5.0 4.3 3.0];
+ts=[6.3 5.0 4.3 3.2];
 td=ts+20;
 VAC=0;
 VOC=0;

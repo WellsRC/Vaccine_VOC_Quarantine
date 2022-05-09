@@ -1,15 +1,15 @@
 % Random entry in qiaratine with testing on exit
 clear;
 
-pobj=parpool(20); % Parallel pool
+pobj=parpool(32); % Parallel pool
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% RT-PCR
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 q=[0:14]; % Quarantine durations consideredd
 SelfIsolate=1; % Self-isolation
 
-IncP=[3 4.3 5 6.3];
-R0=[6.93 5.08 4.19 2.79];
+IncP=[3.2 4.3 5 6.3];
+R0=[6.57 5.08 4.19 2.79];
 VOC=[3 2 1 0];
 % Allcoate memory for output
 IDSLS=zeros(length(IncP),length(q)); 

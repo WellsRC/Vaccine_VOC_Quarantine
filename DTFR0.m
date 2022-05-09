@@ -7,9 +7,9 @@ parpool(20); % Parallel pool
 % NEW Sensitivity curve
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-ts=[6.3 5 4.3 3];
+ts=[6.3 5 4.3 3.2];
 td=ts+20;
-R0=[2.79 4.19 5.08 6.93];
+R0=[2.79 4.19 5.08 6.57];
 
 SelfIsolate=1; %If sympmatics self-isolate
 R0S=R0;

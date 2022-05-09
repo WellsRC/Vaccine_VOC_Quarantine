@@ -10,9 +10,9 @@ load('RAgTest_Name.mat','testName');
 NumTests=length(testName);
 
 
-tsv=[6.3 5 4.3 3];
+tsv=[6.3 5 4.3 3.2];
 tdv=tsv+20;
-R0=[2.79 4.19 5.08 6.93];
+R0=[2.79 4.19 5.08 6.57];
 
 
 for TestN=1:NumTests
