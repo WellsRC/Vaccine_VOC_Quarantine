@@ -2,7 +2,7 @@ clear;
 clc;
 close all;
 
-addpath('Alternative_Test_Results');
+% addpath('Alternative_Test_Results');
 figure('units','normalized','outerposition',[0 0.05 0.6 1]);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 %% Quarantine
@@ -447,5 +447,5 @@ xtickformat('percentage');
 xtickangle(90);
 text(-25.865925315696778,-0.181636363636366,'D','Fontsize',28,'FontWeight','bold');
 
-rmpath('Alternative_Test_Results');
+% rmpath('Alternative_Test_Results');
 print(gcf,['Figure2.png'],'-dpng','-r300');

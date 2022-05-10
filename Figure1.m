@@ -227,6 +227,7 @@ pp(2).Color=hex2rgb('ce1256');
 pp(3).Color=hex2rgb('df65b0');
 pp(4).Color=hex2rgb('d4b9da');
 pp(5).Color=[0.75 0.75 0.75];
+pp(5).LineStyle='-.';
 
 xlim([0 14]);
 ylim([0 sqrt(0.4)]);
